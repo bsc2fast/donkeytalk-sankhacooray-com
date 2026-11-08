@@ -127,6 +127,20 @@
   .fact b svg{width:22px;height:22px;color:var(--ok)}
   .fact span{color:var(--muted);font-size:clamp(13px,1.8vh,15px);line-height:1.5}
 
+  /* roadmap: tables with lamps */
+  .next{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,3vw,48px);align-items:start}
+  .diagram{border-radius:22px;background:var(--card);border:1px solid var(--line);padding:clamp(12px,2vh,20px)}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram .cap{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12.5px;color:var(--muted)}
+  .steps{display:grid;gap:clamp(10px,1.6vh,16px)}
+  .step{display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start}
+  .step .ic{width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+  .step .ic svg{width:20px;height:20px}
+  .step b{display:block;font-family:var(--font-brand);font-size:clamp(17px,2.4vh,20px);margin-bottom:3px}
+  .step p{color:var(--muted);font-size:clamp(13.5px,1.8vh,15px);line-height:1.5}
+  .note{margin-top:clamp(12px,2vh,18px);padding:12px 16px;border-radius:14px;border:1px dashed var(--line);color:var(--muted);font-size:13.5px;line-height:1.5}
+  .note b{color:var(--ink)}
+
   /* enquiry: single-panel form centred, footer pinned on the last screen */
   #enquire{min-height:calc(100dvh - var(--bar-h,68px));justify-content:space-between}
   .form-wrap{margin:auto 0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,64px);align-items:center}
@@ -161,6 +175,7 @@
     .pill:not(:last-child)::after{display:none}
     .cards,.cards.four,.facts{grid-template-columns:1fr 1fr}
     .form-wrap{grid-template-columns:1fr}
+    .next{grid-template-columns:1fr}
     .head.split{grid-template-columns:1fr}
   }
   @media (max-width:560px){
@@ -184,6 +199,7 @@
       <a href="#how">How it works</a>
       <a href="#who">Who it's for</a>
       <a href="#privacy">Privacy</a>
+      <a href="#next">What's next</a>
     </nav>
     <span class="sp"></span>
     <a class="cta" href="#enquire">
@@ -295,6 +311,76 @@
       <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>No recordings</b><span>Audio is processed as it arrives and discarded. Nothing is saved to disk, nothing is replayable.</span></div>
       <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>No identities</b><span>A voice print is a short list of numbers held in memory for the session. It is not linked to a name or a face and it is gone on reset.</span></div>
       <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>Visible by design</b><span>The screen shows exactly what was heard. People see the system working; nothing happens behind their back.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="group" id="next">
+  <div class="wrap">
+    <div class="head split">
+      <div>
+        <p class="eyebrow">What's next</p>
+        <h2>A lamp over every table.</h2>
+      </div>
+      <p class="lede">The screen names the donkey. The next step is to light up the table they are sitting at, so the whole room can see where the noise is coming from.</p>
+    </div>
+    <div class="next">
+      <div class="diagram" aria-label="Three study tables under smart lamps. A small microphone sits on each table. The loudest table's lamp has turned red and a donkey appears above it; the quiet tables glow soft amber.">
+        <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img">
+          <defs>
+            <radialGradient id="gA" cx="50%" cy="0%" r="80%"><stop offset="0" stop-color="#e0a458" stop-opacity=".55"/><stop offset="1" stop-color="#e0a458" stop-opacity="0"/></radialGradient>
+            <radialGradient id="gR" cx="50%" cy="0%" r="80%"><stop offset="0" stop-color="#e8564a" stop-opacity=".7"/><stop offset="1" stop-color="#e8564a" stop-opacity="0"/></radialGradient>
+            <radialGradient id="gG" cx="50%" cy="0%" r="80%"><stop offset="0" stop-color="#7bc47f" stop-opacity=".5"/><stop offset="1" stop-color="#7bc47f" stop-opacity="0"/></radialGradient>
+          </defs>
+          <!-- cables -->
+          <path d="M110 0v38M320 0v38M530 0v38" stroke="var(--muted)" stroke-width="2" opacity=".6"/>
+          <!-- lamps -->
+          <g>
+            <path d="M80 70 L110 38 L140 70 Z" fill="var(--ink)" opacity=".85"/><rect x="80" y="68" width="60" height="6" rx="3" fill="var(--ink)"/>
+            <path d="M40 240 L110 74 L180 240 Z" fill="url(#gG)"/>
+          </g>
+          <g>
+            <path d="M290 70 L320 38 L350 70 Z" fill="var(--ink)" opacity=".85"/><rect x="290" y="68" width="60" height="6" rx="3" fill="var(--ink)"/>
+            <path d="M250 240 L320 74 L390 240 Z" fill="url(#gA)"/>
+          </g>
+          <g>
+            <path d="M500 70 L530 38 L560 70 Z" fill="#e8564a"/><rect x="500" y="68" width="60" height="6" rx="3" fill="#e8564a"/>
+            <path d="M440 240 L530 74 L620 240 Z" fill="url(#gR)"/>
+            <!-- donkey ears + head over the loud table -->
+            <g transform="translate(508 92) scale(1.1)" fill="#e8564a">
+              <path d="M11 4 L17 18 L9 20 Z"/><path d="M29 4 L23 18 L31 20 Z"/><ellipse cx="20" cy="24" rx="12" ry="13"/>
+              <ellipse cx="20" cy="30" rx="8" ry="5.5" fill="var(--bg)"/><circle cx="15.5" cy="21" r="1.8" fill="var(--bg)"/><circle cx="24.5" cy="21" r="1.8" fill="var(--bg)"/>
+            </g>
+            <!-- sound waves -->
+            <path d="M588 120a22 22 0 0 1 0 36M598 110a36 36 0 0 1 0 56" stroke="#e8564a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>
+          </g>
+          <!-- tables -->
+          <g fill="var(--muted)" opacity=".9">
+            <rect x="40" y="232" width="140" height="12" rx="4"/><rect x="52" y="244" width="8" height="40"/><rect x="160" y="244" width="8" height="40"/>
+            <rect x="250" y="232" width="140" height="12" rx="4"/><rect x="262" y="244" width="8" height="40"/><rect x="370" y="244" width="8" height="40"/>
+            <rect x="460" y="232" width="140" height="12" rx="4"/><rect x="472" y="244" width="8" height="40"/><rect x="580" y="244" width="8" height="40"/>
+          </g>
+          <!-- table mics -->
+          <g fill="var(--ink)">
+            <rect x="106" y="214" width="8" height="12" rx="4"/><rect x="102" y="226" width="16" height="4" rx="2"/>
+            <rect x="316" y="214" width="8" height="12" rx="4"/><rect x="312" y="226" width="16" height="4" rx="2"/>
+            <rect x="526" y="214" width="8" height="12" rx="4"/><rect x="522" y="226" width="16" height="4" rx="2"/>
+          </g>
+          <!-- labels -->
+          <g font-family="Inter, sans-serif" font-size="13" font-weight="600" text-anchor="middle">
+            <text x="110" y="276" fill="#7bc47f">quiet</text>
+            <text x="320" y="276" fill="var(--accent)">a whisper</text>
+            <text x="530" y="276" fill="#e8564a">loudest table</text>
+          </g>
+        </svg>
+        <div class="cap"><span>Philips Hue lamps, one per table</span><span>a small mic on each table measures loudness only</span></div>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 15a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v5a4 4 0 0 0 4 4Zm6-4a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.94V22h2v-3.06A8 8 0 0 0 20 11Z" fill="currentColor"/></svg></span><div><b>A mic on every table</b><p>Each table gets a small microphone. The Mac compares them and finds the loudest table in the room, the way a sound meter would, no words needed.</p></div></div>
+        <div class="step"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.3 2.6 5.6.9.9 1.4 1.6 1.4 2.4v1h6v-1c0-.8.5-1.5 1.4-2.4C17.8 13.3 19 11.4 19 9a7 7 0 0 0-7-7Zm0 2a5 5 0 0 1 5 5c0 1.7-.8 3.1-2 4.2-.9.9-1.7 1.8-1.9 2.8h-2.2c-.2-1-1-1.9-1.9-2.8C7.8 12.1 7 10.7 7 9a5 5 0 0 1 5-5ZM9 20h6v2H9v-2Z" fill="currentColor"/></svg></span><div><b>The lamp tells on you</b><p>Smart lamps over the tables glow soft amber while the room is quiet. The loudest table's lamp drifts to red for as long as the chatter lasts, then fades back as a reward for hushing.</p></div></div>
+        <div class="step"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v9h4v2.2l2.8-2.2H20V6H4Z" fill="currentColor"/></svg></span><div><b>Donkeys with a seat number</b><p>On the wall screen, the donkey appears above the table that is talking, so the librarian's remarks land on the right corner of the room.</p></div></div>
+        <div class="note"><b>Why a microphone is fair here.</b> In a silent reading room nobody is supposed to be talking, so a table mic is a noise meter, not a listening device. The table lights only need loudness. Transcription stays optional and, as always, never leaves the Mac. It is social pressure with a wink: a little embarrassment, a lot of quiet.</div>
+      </div>
     </div>
   </div>
 </section>
