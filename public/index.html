@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Donkey Talk — the library that listens</title>
+<meta name="description" content="Donkey Talk turns anyone who talks in a quiet room into a donkey on screen, voice by voice, with live transcripts and a kind librarian asking for silence. Runs on a Mac. Nothing is uploaded." />
+<link rel="canonical" href="https://donkeytalk.sankhacooray.com/" />
+<meta name="theme-color" content="#14110f" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Donkey Talk" />
+<meta property="og:title" content="Donkey Talk — the library that listens" />
+<meta property="og:description" content="Anyone who talks in a quiet room becomes a donkey on screen, voice by voice, with live transcripts and a kind librarian asking for silence. Runs on a Mac. Nothing is uploaded." />
+<meta property="og:url" content="https://donkeytalk.sankhacooray.com/" />
+<meta property="og:image" content="https://donkeytalk.sankhacooray.com/assets/og-card.jpg?v=1" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Donkey Talk: headline The library that listens, talkers become donkeys, next to a scene of four donkey-headed students with speech bubbles and a librarian with a finger on her lips." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Donkey Talk — the library that listens" />
+<meta name="twitter:description" content="Anyone who talks in a quiet room becomes a donkey on screen, voice by voice, with live transcripts and a kind librarian asking for silence. Runs on a Mac." />
+<meta name="twitter:image" content="https://donkeytalk.sankhacooray.com/assets/og-card.jpg?v=1" />
+<meta name="twitter:image:alt" content="Donkey Talk: four donkey-headed students with speech bubbles and a librarian with a finger on her lips." />
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Donkey Talk" />
+<script>try { const q = new URLSearchParams(location.search).get('theme'); const t = q || localStorage.getItem('dt-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&display=swap" />
+<style>
+  :root{
+    --bg:#14110f; --surface:rgba(30,24,20,.74); --card:rgba(255,255,255,.05); --card-hover:rgba(255,255,255,.085);
+    --line:rgba(255,255,255,.08); --ink:#f3ebe0; --muted:#b7a898; --accent:#e0a458; --accent-hi:#ecb86f; --on-accent:#1b140e;
+    --ok:#7bc47f; --font-ui:"Inter",system-ui,sans-serif; --font-brand:"Fraunces",Georgia,serif; --maxw:1200px;
+  }
+  @media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+    --bg:#efe4d3; --surface:rgba(255,250,243,.8); --card:rgba(255,255,255,.55); --card-hover:rgba(255,255,255,.8);
+    --line:rgba(0,0,0,.07); --ink:#2a211b; --muted:#6f5f52; --accent:#b8732a; --accent-hi:#c98636; --on-accent:#fff8ee; --ok:#3f8a4a; } }
+  :root[data-theme="light"]{
+    --bg:#efe4d3; --surface:rgba(255,250,243,.8); --card:rgba(255,255,255,.55); --card-hover:rgba(255,255,255,.8);
+    --line:rgba(0,0,0,.07); --ink:#2a211b; --muted:#6f5f52; --accent:#b8732a; --accent-hi:#c98636; --on-accent:#fff8ee; --ok:#3f8a4a; }
+
+  *{box-sizing:border-box}
+  html{height:100%;overflow:hidden;background:var(--bg);overscroll-behavior:none}
+  body{height:100%;margin:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;color:var(--ink);font:16px/1.55 var(--font-ui);-webkit-font-smoothing:antialiased}
+  a{color:var(--accent)}
+  h1,h2,h3{font-family:var(--font-brand);line-height:1.1;letter-spacing:-.015em;margin:0}
+  p{margin:0}
+  button{font:inherit;color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;width:100%}
+  .eyebrow{font:600 12px/1 var(--font-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  .lede{font-size:clamp(16px,2.3vh,19px);color:var(--muted);max-width:54ch}
+  #dust{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+  /* app bar */
+  .topbar{position:sticky;top:0;z-index:10;padding:10px 12px 0}
+  .bar{display:flex;align-items:center;gap:14px;height:58px;padding:0 10px 0 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 28px rgba(0,0,0,.18);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2)}
+  .brand{display:flex;align-items:center;gap:10px;font:700 20px/1 var(--font-brand);color:var(--ink);text-decoration:none;white-space:nowrap}
+  .brand svg{width:28px;height:28px}
+  .bar nav{display:flex;gap:4px;margin-left:10px}
+  .bar nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px;transition:background-color .25s,color .25s}
+  .bar nav a:hover{color:var(--ink)}
+  .bar nav a[aria-current]{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--ink);font-weight:600}
+  .bar .sp{margin-left:auto}
+  .cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:1px 18px 0 16px;border-radius:999px;background:var(--accent);color:var(--on-accent)!important;font:600 14.5px/1 var(--font-ui);text-decoration:none;white-space:nowrap;border:0;cursor:pointer;transition:background-color .15s,box-shadow .15s}
+  .cta:hover{background:var(--accent-hi);box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 24%,transparent)}
+  .cta:disabled{opacity:.6;cursor:progress;box-shadow:none}
+  .cta svg{width:17px;height:17px;flex:none}
+  .theme-btn{width:40px;height:40px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background-color .15s,color .15s}
+  .theme-btn:hover{background:var(--card-hover);color:var(--ink)}
+  .theme-btn svg{width:18px;height:18px}
+  .theme-btn .i-moon{display:none}
+  @media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .theme-btn .i-sun{display:none} :root:not([data-theme="dark"]) .theme-btn .i-moon{display:block} }
+  :root[data-theme="light"] .theme-btn .i-sun{display:none}
+  :root[data-theme="light"] .theme-btn .i-moon{display:block}
+
+  /* groups */
+  main{position:relative;z-index:1}
+  .group{display:flex;flex-direction:column;justify-content:center;padding-block:clamp(14px,3vh,52px);scroll-margin-top:var(--bar-h,68px)}
+  .group h2{font-size:clamp(26px,4.4vh,40px)}
+  .head{margin-bottom:clamp(14px,3vh,30px)}
+  .head.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3.6vw,52px);align-items:end}
+
+  /* hero */
+  .hero .wrap{max-width:1340px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,3.6vw,56px);align-items:center}
+  .hero h1{font-size:clamp(34px,min(8vh,11.5vw),68px);line-height:1.02;margin-bottom:clamp(14px,2.6vh,24px)}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(18px,3.6vh,32px)}
+  .chip{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13.5px;font-weight:500;white-space:nowrap}
+  .chip svg{width:15px;height:15px;color:var(--accent)}
+  .shot{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.4);background:#000;max-height:66vh}
+  .shot img{display:block;width:100%;height:auto;max-height:66vh;object-fit:cover;object-position:top}
+  .shot .light{display:none}
+  @media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .shot .dark{display:none} :root:not([data-theme="dark"]) .shot .light{display:block} }
+  :root[data-theme="light"] .shot .dark{display:none}
+  :root[data-theme="light"] .shot .light{display:block}
+  .shot .tag{position:absolute;left:14px;top:14px;padding:6px 11px;border-radius:999px;background:rgba(20,15,12,.7);color:#f3ebe0;font-size:12px;font-weight:600;letter-spacing:.04em;backdrop-filter:blur(8px)}
+
+  /* pipeline strip */
+  .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch;margin-bottom:clamp(16px,3vh,32px)}
+  .pill{position:relative;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+  .pill .n{width:30px;height:30px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:13px}
+  .pill b{display:block;font-size:14.5px}
+  .pill span{display:block;font-size:12.5px;color:var(--muted);line-height:1.35}
+  .pill:not(:last-child)::after{content:"";position:absolute;right:-9px;top:50%;width:8px;height:8px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:translateY(-50%) rotate(45deg);opacity:.6}
+
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,20px)}
+  .cards.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{display:flex;flex-direction:column;gap:8px;padding:clamp(16px,2.4vh,24px);border-radius:18px;background:var(--card);border:1px solid var(--line);transition:background-color .25s}
+  .card:hover{background:var(--card-hover)}
+  .card .row{display:flex;align-items:center;gap:12px}
+  .card .ic{width:38px;height:38px;flex:none;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+  .card .ic svg{width:20px;height:20px}
+  .card h3{font-size:clamp(17px,2.4vh,20px)}
+  .card p{color:var(--muted);font-size:clamp(13.5px,1.8vh,15px);line-height:1.5}
+
+  /* privacy strip */
+  .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.6vw,20px)}
+  .fact{padding:clamp(14px,2.2vh,22px);border-radius:18px;background:var(--card);border:1px solid var(--line)}
+  .fact b{display:flex;align-items:center;gap:10px;font-family:var(--font-brand);font-size:clamp(18px,2.8vh,24px);margin-bottom:6px}
+  .fact b svg{width:22px;height:22px;color:var(--ok)}
+  .fact span{color:var(--muted);font-size:clamp(13px,1.8vh,15px);line-height:1.5}
+
+  /* enquiry: single-panel form centred, footer pinned on the last screen */
+  #enquire{min-height:calc(100dvh - var(--bar-h,68px));justify-content:space-between}
+  .form-wrap{margin:auto 0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,64px);align-items:center}
+  form{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:clamp(18px,2.6vh,28px);border-radius:22px;background:var(--card);border:1px solid var(--line)}
+  form .full{grid-column:1/-1}
+  label.f{display:grid;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+  input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;outline:none;transition:border-color .15s,box-shadow .15s}
+  input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+  textarea{min-height:88px;resize:vertical}
+  .roles{display:flex;flex-wrap:wrap;gap:8px}
+  .roles button{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13.5px;font-weight:500;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s}
+  .roles button:hover{color:var(--ink)}
+  .roles button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .form-foot{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .status{font-size:13.5px;color:var(--muted);min-height:1.2em}
+  .status.err{color:#e07b6b}
+  .done{display:none;padding:clamp(22px,4vh,40px);border-radius:22px;background:var(--card);border:1px solid var(--line);text-align:center}
+  .done h3{font-size:clamp(22px,3.4vh,30px);margin-bottom:8px}
+  .done p{color:var(--muted)}
+  .done svg{width:44px;height:44px;color:var(--ok);margin-bottom:10px}
+  .footer{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 0 18px;color:var(--muted);font-size:13px;flex-wrap:wrap}
+  .footer a{color:var(--muted);text-decoration:none}
+  .footer a:hover{color:var(--ink)}
+  .footer .dot{opacity:.5}
+
+  @media (max-width:900px){
+    .bar nav{display:none}
+    .hero .wrap{grid-template-columns:1fr}
+    .hero h1{font-size:clamp(32px,9vw,48px)}
+    .strip{grid-template-columns:1fr 1fr}
+    .pill:not(:last-child)::after{display:none}
+    .cards,.cards.four,.facts{grid-template-columns:1fr 1fr}
+    .form-wrap{grid-template-columns:1fr}
+    .head.split{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .cards,.cards.four,.facts,.strip{grid-template-columns:1fr}
+    form{grid-template-columns:1fr}
+    .cta span{display:none}
+    .cta{padding:0 12px}
+  }
+</style>
+</head>
+<body>
+<canvas id="dust" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <div class="bar">
+    <a class="brand" href="#top" aria-label="Donkey Talk, home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M11 4 L17 18 L9 20 Z" fill="var(--accent)"/><path d="M29 4 L23 18 L31 20 Z" fill="var(--accent)"/><ellipse cx="20" cy="24" rx="12" ry="13" fill="var(--accent)"/><ellipse cx="20" cy="30" rx="8" ry="5.5" fill="var(--bg)"/><circle cx="15.5" cy="21" r="1.8" fill="var(--bg)"/><circle cx="24.5" cy="21" r="1.8" fill="var(--bg)"/></svg>
+      Donkey Talk
+    </a>
+    <nav aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+    <span class="sp"></span>
+    <a class="cta" href="#enquire">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm0 2v.4l8 5.1 8-5.1V7H4Zm16 2.8-8 5.1-8-5.1V17h16V9.8Z" fill="currentColor"/></svg>
+      <span>Bring it to your library</span>
+    </a>
+    <button class="theme-btn" id="theme" type="button" aria-label="Switch to light theme">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5 1 3h-2l1-3Zm0 20-1-3h2l-1 3ZM2 12l3-1v2l-3-1Zm20 0-3 1v-2l3 1ZM4.9 4.9l2.9 1.4-1.4 1.4L4.9 4.9Zm14.2 14.2-2.9-1.4 1.4-1.4 1.5 2.8ZM4.9 19.1l1.5-2.8 1.4 1.4-2.9 1.4ZM19.1 4.9l-1.5 2.8-1.4-1.4 2.9-1.4Z" fill="currentColor"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.3A8.5 8.5 0 0 1 8.7 4 9 9 0 1 0 20 15.3Z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="home">
+
+<section class="group hero" id="top" data-solo>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">For libraries and quiet study spaces</p>
+      <h1>The library that <em>listens.</em></h1>
+      <p class="lede">A Mac in the room hears what you hear. Whoever talks becomes a donkey on a big screen, voice by voice, with their words in a speech bubble, while a kind librarian asks for silence. Gentle shame, instant results.</p>
+      <div class="chips">
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M12 15a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v5a4 4 0 0 0 4 4Zm6-4a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.94V22h2v-3.06A8 8 0 0 0 20 11Z" fill="currentColor"/></svg>Runs on one Mac</span>
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm0 2.2 6 2.2V11c0 4-2.6 7.8-6 9-3.4-1.2-6-5-6-9V6.4l6-2.2Z" fill="currentColor"/></svg>Nothing uploaded</span>
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm-1 3h2v4.6l3.2 1.9-1 1.7L11 13.6Z" fill="currentColor"/></svg>Text in about a second</span>
+      </div>
+    </div>
+    <figure class="shot" style="margin:0">
+      <img class="dark" src="/assets/scene-dark.jpg" width="1440" height="900" alt="Donkey Talk screen: four donkey-headed students behind a library table with speech bubbles, a wall sound meter, and a librarian in front with a finger on her lips. Caption: Fascinating, Hee-Haw Harold. Please continue, somewhere else." />
+      <img class="light" src="/assets/scene-light.jpg" width="1440" height="900" alt="" />
+      <span class="tag">LIVE ON THE WALL SCREEN</span>
+    </figure>
+  </div>
+</section>
+
+<section class="group" id="how">
+  <div class="wrap">
+    <div class="head split">
+      <div>
+        <p class="eyebrow">How it works</p>
+        <h2>Four steps, all on the Mac.</h2>
+      </div>
+      <p class="lede">Put a Mac with a screen where people can see it. Start listening. That is the whole setup.</p>
+    </div>
+    <div class="strip">
+      <div class="pill"><span class="n">1</span><div><b>It listens</b><span>The Mac microphone hears the room.</span></div></div>
+      <div class="pill"><span class="n">2</span><div><b>Each voice gets a print</b><span>A speaker model fingerprints every utterance.</span></div></div>
+      <div class="pill"><span class="n">3</span><div><b>Prints become donkeys</b><span>New voice, new donkey. Same voice, same donkey. Four seats.</span></div></div>
+      <div class="pill"><span class="n">4</span><div><b>Silence redeems</b><span>Two quiet minutes and the donkey leaves with honour.</span></div></div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v9h4v2.2l2.8-2.2H20V6H4Z" fill="currentColor"/></svg></span><h3>Words in a bubble, live</h3></div>
+        <p>Speech is transcribed on the Mac's GPU while the person is still talking. The bubble fills about a second after they start and is corrected when they stop.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-6a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm-7 14a7 7 0 0 1 14 0h-2a5 5 0 0 0-10 0H5Z" fill="currentColor"/></svg></span><h3>The same voice, the same donkey</h3></div>
+        <p>Voice prints are compared on the spot, so a repeat talker keeps their seat, their name card and a running word count. When the table is full, the nearest donkey takes the blame.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm-3 6a1.3 1.3 0 1 1 0 2.6A1.3 1.3 0 0 1 9 10Zm6 0a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6Zm-7.2 5h8.4a4.5 4.5 0 0 1-8.4 0Z" fill="currentColor"/></svg></span><h3>A librarian with opinions</h3></div>
+        <p>She never speaks, but her caption does: dry remarks for noise, warm praise for silence, and a wall meter showing the room's decibels. Thirty quiet seconds earn a compliment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="group" id="who">
+  <div class="wrap">
+    <div class="head split">
+      <div>
+        <p class="eyebrow">Who it's for</p>
+        <h2>Anyone who keeps a quiet room.</h2>
+      </div>
+      <p class="lede">Built after too many evenings next to students who treat the reading room like a cafe. It scolds with humour, so people laugh and then lower their voice.</p>
+    </div>
+    <div class="cards four">
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 3h5a3 3 0 0 1 3 3 3 3 0 0 1 3-3h5v15h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4V3Zm2 2v11h4a4 4 0 0 1 1 .13V6a1 1 0 0 0-1-1H6Zm12 0h-4a1 1 0 0 0-1 1v10.13A4 4 0 0 1 14 16h4V5Z" fill="currentColor"/></svg></span><h3>Librarians</h3></div>
+        <p>Reading rooms and silent floors. The screen does the shushing, so you don't have to walk over every ten minutes.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 1 8l11 5 9-4.1V15h2V8L12 3Zm-7 9.4V16c0 1.7 3.1 4 7 4s7-2.3 7-4v-3.6l-7 3.2-7-3.2Z" fill="currentColor"/></svg></span><h3>Educators</h3></div>
+        <p>Study halls, labs and exam prep rooms. A playful nudge lands better with students than another laminated sign.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21V7l9-4 9 4v14h-7v-5h-4v5H3Zm2-2h2v-5h10v5h2V8.3l-7-3.1-7 3.1V19Zm4-8h2V9H9v2Zm4 0h2V9h-2v2Z" fill="currentColor"/></svg></span><h3>Facilities and co-working</h3></div>
+        <p>Quiet zones in shared offices, co-working spaces and hostels. Visible, fair and the same for everyone.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.3 2.6 5.6.9.9 1.4 1.6 1.4 2.4v1h6v-1c0-.8.5-1.5 1.4-2.4C17.8 13.3 19 11.4 19 9a7 7 0 0 0-7-7Zm0 2a5 5 0 0 1 5 5c0 1.7-.8 3.1-2 4.2-.9.9-1.7 1.8-1.9 2.8h-2.2c-.2-1-1-1.9-1.9-2.8C7.8 12.1 7 10.7 7 9a5 5 0 0 1 5-5ZM9 20h6v2H9v-2Z" fill="currentColor"/></svg></span><h3>Curious makers</h3></div>
+        <p>Researchers in HCI, speech or behaviour change who want to try the idea in their own space, or adapt the librarian to another setting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="group" id="privacy">
+  <div class="wrap">
+    <div class="head split">
+      <div>
+        <p class="eyebrow">Privacy</p>
+        <h2>Loud in the room, silent on the network.</h2>
+      </div>
+      <p class="lede">Everything runs on the Mac that is standing in the room. There is no account, no cloud service and no audio leaving the building.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>On-device</b><span>Speech recognition and voice prints run on the Mac's own GPU. Switch the Wi-Fi off and it still works.</span></div>
+      <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>No recordings</b><span>Audio is processed as it arrives and discarded. Nothing is saved to disk, nothing is replayable.</span></div>
+      <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>No identities</b><span>A voice print is a short list of numbers held in memory for the session. It is not linked to a name or a face and it is gone on reset.</span></div>
+      <div class="fact"><b><svg viewBox="0 0 24 24"><path d="m9.5 16.2-3.7-3.7 1.4-1.4 2.3 2.3 7.3-7.3 1.4 1.4-8.7 8.7Z" fill="currentColor"/></svg>Visible by design</b><span>The screen shows exactly what was heard. People see the system working; nothing happens behind their back.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="group" id="enquire">
+  <div class="wrap form-wrap">
+    <div>
+      <p class="eyebrow">Get in touch</p>
+      <h2>Want it in your space?</h2>
+      <p class="lede" style="margin-top:12px">Donkey Talk is a private build running in a few rooms. If you look after a library, a study hall or a quiet zone and would like to try it, or if you simply value the idea, tell me a little about your space. I reply personally.</p>
+      <div class="chips" style="margin-top:20px">
+        <span class="chip">A pilot in your room</span>
+        <span class="chip">A demo over a call</span>
+        <span class="chip">Collaboration or research</span>
+      </div>
+    </div>
+    <div>
+      <form id="form" novalidate>
+        <label class="f">Your name<input name="name" autocomplete="name" required maxlength="120" placeholder="Priya Nair" /></label>
+        <label class="f">Email<input name="email" type="email" autocomplete="email" required maxlength="200" placeholder="you@library.edu" /></label>
+        <label class="f full">Organisation<input name="org" autocomplete="organization" maxlength="160" placeholder="Central Library, University of …" /></label>
+        <div class="f full">
+          <span style="font-size:13px;font-weight:600;color:var(--muted)">I am a</span>
+          <div class="roles" role="radiogroup" aria-label="Your role">
+            <button type="button" data-role="librarian" aria-pressed="false">Librarian</button>
+            <button type="button" data-role="educator" aria-pressed="false">Educator</button>
+            <button type="button" data-role="facilities" aria-pressed="false">Facilities</button>
+            <button type="button" data-role="student" aria-pressed="false">Student</button>
+            <button type="button" data-role="other" aria-pressed="false">Other</button>
+          </div>
+        </div>
+        <label class="f full">The space<input name="space" maxlength="160" placeholder="Silent reading room, level 3, about 80 seats" /></label>
+        <label class="f full">Anything else<textarea name="message" maxlength="2000" placeholder="What is the noise like, and what have you tried?"></textarea></label>
+        <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off" /></label>
+        <div class="form-foot full">
+          <span class="status" id="status" aria-live="polite"></span>
+          <button class="cta" type="submit" id="send">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 21 3l-8.5 18-2.3-7.2L3 11.5Zm5.6.4 3.5 1.1 1.1 3.5 4.3-9.1-8.9 4.5Z" fill="currentColor"/></svg>
+            <span>Send</span>
+          </button>
+        </div>
+      </form>
+      <div class="done" id="done">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm-1.4 11.6-3.3-3.3 1.4-1.4 1.9 1.9 4.7-4.7 1.4 1.4-6.1 6.1Z" fill="currentColor"/></svg>
+        <h3>Thank you. Quietly noted.</h3>
+        <p>I will write back within a few days. The librarian approves of your initiative.</p>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <span>Donkey Talk</span><span class="dot">·</span>
+    <span>an experiment by <a href="https://sankhacooray.com">Sankha Cooray</a></span><span class="dot">·</span>
+    <span>the app is private, this page is <a href="https://github.com/bsc2fast/donkeytalk-sankhacooray-com">open</a></span>
+  </footer>
+</section>
+
+</main>
+
+<script type="module">
+  import { initScreenFit } from '/screen-fit.js';
+  initScreenFit();
+
+  // theme
+  const root = document.documentElement, btn = document.getElementById('theme');
+  const isLight = () => root.dataset.theme === 'light' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: light)').matches);
+  const label = () => btn.setAttribute('aria-label', isLight() ? 'Switch to dark theme' : 'Switch to light theme');
+  label();
+  btn.addEventListener('click', () => {
+    root.dataset.theme = isLight() ? 'dark' : 'light';
+    try { localStorage.setItem('dt-theme', root.dataset.theme); } catch (e) {}
+    document.querySelector('meta[name="theme-color"]').content = isLight() ? '#efe4d3' : '#14110f';
+    label();
+  });
+
+  // current section in the app bar
+  const links = [...document.querySelectorAll('.bar nav a')];
+  const sections = links.map((a) => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) links.forEach((a, i) => { if (sections[i] === e.target) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach((s) => s && io.observe(s));
+
+  // dust motes
+  (() => {
+    const c = document.getElementById('dust'), ctx = c.getContext('2d');
+    let w, h; const motes = [];
+    const resize = () => { w = c.width = innerWidth * devicePixelRatio; h = c.height = innerHeight * devicePixelRatio; };
+    resize(); addEventListener('resize', resize);
+    for (let i = 0; i < 60; i++) motes.push({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.6, vx: (Math.random() - .5) * .00008, vy: -.00004 - Math.random() * .00006, a: .08 + Math.random() * .2 });
+    const tick = () => {
+      if (!document.hidden) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = getComputedStyle(root).getPropertyValue('--accent').trim() || '#e0a458';
+        for (const m of motes) {
+          m.x += m.vx; m.y += m.vy;
+          if (m.y < -.02) { m.y = 1.02; m.x = Math.random(); }
+          if (m.x < -.02 || m.x > 1.02) m.vx *= -1;
+          ctx.globalAlpha = m.a * (.6 + .4 * Math.sin(performance.now() / 900 + m.r * 10));
+          ctx.beginPath(); ctx.arc(m.x * w, m.y * h, m.r * devicePixelRatio, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      requestAnimationFrame(tick);
+    };
+    tick();
+  })();
+
+  // enquiry form
+  const form = document.getElementById('form'), status = document.getElementById('status'), send = document.getElementById('send');
+  let role = '';
+  document.querySelectorAll('.roles button').forEach((b) => b.addEventListener('click', () => {
+    role = b.dataset.role;
+    document.querySelectorAll('.roles button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const body = Object.fromEntries(fd.entries()); body.role = role;
+    status.className = 'status'; status.textContent = '';
+    if ((body.name || '').trim().length < 2) { status.className = 'status err'; status.textContent = 'Please tell me your name.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(body.email || '')) { status.className = 'status err'; status.textContent = 'That email address does not look right.'; return; }
+    send.disabled = true; status.textContent = 'Sending…';
+    try {
+      const r = await fetch('/api/enquire', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || `Error ${r.status}`);
+      form.style.display = 'none'; document.getElementById('done').style.display = 'block';
+    } catch (err) {
+      status.className = 'status err'; status.textContent = err.message;
+    } finally { send.disabled = false; }
+  });
+</script>
+</body>
+</html>

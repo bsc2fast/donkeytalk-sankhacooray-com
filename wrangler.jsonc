@@ -1,0 +1,17 @@
+{
+  // Cloudflare Worker for donkeytalk.sankhacooray.com: the marketing site (public/)
+  // plus /api/enquire, which stores enquiries in D1. The app itself is NOT
+  // published here; it is a private repo that runs locally on a Mac.
+  // Deploy:  npm install && npm run deploy   (needs CLOUDFLARE_API_TOKEN or `npx wrangler login`)
+  // Secret:  npx wrangler secret put ENQUIRY_KEY   (bearer key for GET /api/enquiries)
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "donkeytalk",
+  "compatibility_date": "2025-01-01",
+  "main": "src/index.js",
+  "workers_dev": true,
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/api/*"] },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "donkeytalk", "database_id": "a66805cd-a068-46e9-b4f5-262533518346" }
+  ],
+  "routes": [ { "pattern": "donkeytalk.sankhacooray.com", "custom_domain": true } ]
+}

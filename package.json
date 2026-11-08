@@ -1,0 +1,14 @@
+{
+  "name": "donkeytalk-sankhacooray-com",
+  "version": "1.0.0",
+  "private": true,
+  "description": "donkeytalk.sankhacooray.com — Donkey Talk marketing site and enquiry API (Cloudflare Worker + D1)",
+  "scripts": {
+    "dev": "wrangler dev --port 4872",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute donkeytalk --remote --file schema.sql",
+    "db:local": "wrangler d1 execute donkeytalk --local --file schema.sql",
+    "enquiries": "node scripts/enquiries.mjs"
+  },
+  "devDependencies": { "wrangler": "^4" }
+}

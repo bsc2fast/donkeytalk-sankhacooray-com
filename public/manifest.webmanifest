@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Donkey Talk",
+  "short_name": "Donkey Talk",
+  "description": "A library that listens. Whoever talks becomes a donkey on screen, voice by voice, while a kind librarian asks for silence. Runs entirely on a Mac.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#14110f",
+  "background_color": "#14110f",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

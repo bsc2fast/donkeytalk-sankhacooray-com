@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,500&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+  body{position:relative;background:radial-gradient(ellipse at 20% 0%,#2e241c 0%,#14110f 55%,#0c0a08 100%);font-family:Inter,sans-serif;color:#f3ebe0}
+  .brand{position:absolute;left:64px;top:56px;display:flex;align-items:center;gap:14px;font:700 26px Fraunces,serif}
+  .brand svg{width:40px;height:40px}
+  h1{position:absolute;left:64px;top:118px;margin:0;font:700 58px/1.04 Fraunces,serif;letter-spacing:-.02em;width:560px}
+  h1 em{font-style:normal;color:#e0a458}
+  .sub{position:absolute;left:64px;top:388px;width:520px;font:500 24px/1.4 Inter,sans-serif;color:#b7a898}
+  .chips{position:absolute;left:64px;top:510px;display:flex;gap:12px}
+  .chip{padding:10px 18px;border-radius:999px;border:1.5px solid rgba(224,164,88,.5);font:600 17px Inter,sans-serif;color:#e0a458}
+  .shot{position:absolute;right:-150px;top:90px;width:760px;height:475px;border-radius:22px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);transform:rotate(-4deg)}
+  .shot img{position:absolute;left:0;top:0;width:100%;height:auto}
+  .glow{position:absolute;right:120px;top:140px;width:500px;height:400px;background:radial-gradient(ellipse,rgba(224,164,88,.22),transparent 65%);filter:blur(10px)}
+</style></head>
+<body>
+  <div class="glow"></div>
+  <div class="shot"><img src="../public/assets/scene-dark.jpg" alt=""></div>
+  <div class="brand">
+    <svg viewBox="0 0 40 40"><path d="M11 4 L17 18 L9 20 Z" fill="#e0a458"/><path d="M29 4 L23 18 L31 20 Z" fill="#e0a458"/><ellipse cx="20" cy="24" rx="12" ry="13" fill="#e0a458"/><ellipse cx="20" cy="30" rx="8" ry="5.5" fill="#14110f"/><circle cx="15.5" cy="21" r="1.8" fill="#14110f"/><circle cx="24.5" cy="21" r="1.8" fill="#14110f"/></svg>
+    Donkey Talk
+  </div>
+  <h1>The library<br>that listens.<br><em>Talkers become<br>donkeys.</em></h1>
+  <div class="sub">Live transcripts, voice by voice, on a Mac in the room. Nothing is uploaded.</div>
+  <div class="chips"><span class="chip">Libraries</span><span class="chip">Study halls</span><span class="chip">Reading rooms</span></div>
+</body></html>
